@@ -1,0 +1,22 @@
+# Apple Maps shared rule set for Egern
+# Use this same file in:
+# 1) Tools -> Rules -> Rule Set -> DIRECT
+# 2) DNS Forward -> Proxy Rule Set -> TencentDNS
+
+domain_set:
+  - maps.apple
+  - maps.apple.com
+  - maps.apple.com.cn
+  - configuration.ls.apple.com
+  - sundew.ls.apple.com
+  - gs-loc.apple.com
+  - gs-loc-cn.apple.com
+  - cdn2.smoot.apple.com
+
+domain_suffix_set:
+  - apple-mapkit.com
+  - is.autonavi.com
+
+domain_wildcard_set:
+  - gspe*.ls.apple.com
+  - gsp*.ls.apple.com
