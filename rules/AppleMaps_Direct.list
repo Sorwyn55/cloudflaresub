@@ -1,0 +1,25 @@
+# NAME: AppleMaps_Direct
+# DESC: Apple Maps / MapKit / China map backend routing rules for Egern
+# UPDATED: 2026-08-08
+# POLICY: Set this RULE-SET to DIRECT in Egern
+
+# Short/shared Apple Maps URLs and web Maps
+DOMAIN,maps.apple
+DOMAIN,maps.apple.com
+
+# MapKit tiles / APIs
+DOMAIN-SUFFIX,apple-mapkit.com
+
+# Apple Maps / location-service backends
+DOMAIN,configuration.ls.apple.com
+DOMAIN-WILDCARD,gspe*.ls.apple.com
+DOMAIN-WILDCARD,gsp*.ls.apple.com
+DOMAIN,sundew.ls.apple.com
+DOMAIN,gs-loc.apple.com
+DOMAIN,gs-loc-cn.apple.com
+
+# China mainland Apple Maps backend (AutoNavi)
+DOMAIN-SUFFIX,is.autonavi.com
+
+# Apple Maps search/content endpoint
+DOMAIN,cdn2.smoot.apple.com
