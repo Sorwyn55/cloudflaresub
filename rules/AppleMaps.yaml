@@ -1,7 +1,8 @@
-# Apple Maps shared rule set for Egern
-# Use this same file in:
-# 1) Tools -> Rules -> Rule Set -> DIRECT
-# 2) DNS Forward -> Proxy Rule Set -> TencentDNS
+# Apple Maps master rule set for Egern
+# Canonical source: use this same file for BOTH traffic routing and DNS forwarding.
+# Traffic: Rule Set -> DIRECT
+# DNS: Proxy Rule Set -> TencentDNS
+# Updated: 2026-08-08
 
 domain_set:
   - maps.apple
