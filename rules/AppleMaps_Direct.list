@@ -6,6 +6,7 @@
 # Short/shared Apple Maps URLs and web Maps
 DOMAIN,maps.apple
 DOMAIN,maps.apple.com
+DOMAIN,maps.apple.com.cn
 
 # MapKit tiles / APIs
 DOMAIN-SUFFIX,apple-mapkit.com
