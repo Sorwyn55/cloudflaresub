@@ -1,0 +1,12 @@
+# Apple Weather / WeatherKit rule set for Egern
+# iPhone Weather app, weather widgets, and Apple weather maps.
+# Import as a remote Rule Set and assign your preferred proxy policy.
+# This is a domain-based rule set, not an app-process rule.
+
+domain_suffix_set:
+  - weather-data.apple.com
+  - weather-data-origin.apple.com
+  - weather-edge.apple.com
+  - weather-map.apple.com
+  - weather-map2.apple.com
+  - weatherkit.apple.com
