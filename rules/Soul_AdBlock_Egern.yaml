@@ -1,8 +1,15 @@
 name: "Soul 去广告（保守版）"
-description: "拦截社区规则公开列出的 Soul 广告域名及开屏广告接口；未测试当前 Soul 版本。"
+description: "Soul 去广告 + 可配置网络出口（默认 DIRECT 国内直连）。尚未在用户设备实测。"
 author: "社区规则整理 / Egern 适配"
 homepage: "https://clashios.app/stoverride/lodepuly_vpn_tool/Soul_remove_ads"
 icon: "shield.lefthalf.filled"
+
+# SOUL_POLICY 默认为 DIRECT：从本机宽带/移动网络直接访问 Soul，通常显示本地 IP 归属地。
+# 可在主配置的 modules 引用中使用 compat_arguments.SOUL_POLICY 覆盖为已存在的策略组名/节点名。
+# 注意 PROXY 不是 Egern 内置策略名，只有在你确实建有叫 PROXY 的策略组时才可填写。
+compat_arguments:
+  SOUL_POLICY: "DIRECT"
+compat_arguments_desc: "SOUL_POLICY: 默认 DIRECT（本地直连）。如需走代理，在 Egern 主配置的 modules 引用中将 SOUL_POLICY 改为现有代理策略组/节点的准确名称。仅作用于 soulapp.cn 及其子域；App 其他主机按既有规则分流。"
 
 # 来源：lodepuly Soul 去广告规则（2024-07-16）；请勿将旧版配置当作当前版本的实机测试结果。
 # 以下四条广告域名为来源中明确标注的拦截目标。
@@ -20,6 +27,14 @@ rules:
   - domain:
       match: "soul-ad.soulapp.cn"
       policy: REJECT
+
+# Soul 主域名分流：放在四条广告拒绝规则之后，避免 DIRECT 抢先命中广告请求。
+# 官方 Egern 模块支持 compat_arguments 参数替换：{{{SOUL_POLICY}}}。
+# 来源：lodepuly Soul 规则指定 DOMAIN-SUFFIX,soulapp.cn,DIRECT（2024-07-16）。
+# 未覆盖未证实属于 Soul 的 IP 段或第三方域名；需要结合 Egern 请求日志排查漏网请求。
+  - domain_suffix:
+      match: "soulapp.cn"
+      policy: "{{{SOUL_POLICY}}}"
 
 # 仅拦截 ssp.soulapp.cn 的开屏竞价接口。需开启 Egern HTTPS 解密并信任证书。
 map_locals:
