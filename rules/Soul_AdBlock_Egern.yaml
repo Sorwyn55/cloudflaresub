@@ -1,0 +1,35 @@
+name: "Soul 去广告（保守版）"
+description: "拦截社区规则公开列出的 Soul 广告域名及开屏广告接口；未测试当前 Soul 版本。"
+author: "社区规则整理 / Egern 适配"
+homepage: "https://clashios.app/stoverride/lodepuly_vpn_tool/Soul_remove_ads"
+icon: "shield.lefthalf.filled"
+
+# 来源：lodepuly Soul 去广告规则（2024-07-16）；请勿将旧版配置当作当前版本的实机测试结果。
+# 以下四条广告域名为来源中明确标注的拦截目标。
+# 仅做精确域名拦截，不屏蔽整个 soulapp.cn，以免影响 Soul 正常功能。
+rules:
+  - domain:
+      match: "ad-h5-cdn.soulapp.cn"
+      policy: REJECT
+  - domain:
+      match: "ad-h5-station-cdn.soulapp.cn"
+      policy: REJECT
+  - domain:
+      match: "ad-r.soulapp.cn"
+      policy: REJECT
+  - domain:
+      match: "soul-ad.soulapp.cn"
+      policy: REJECT
+
+# 仅拦截 ssp.soulapp.cn 的开屏竞价接口。需开启 Egern HTTPS 解密并信任证书。
+map_locals:
+  - match: '^https://ssp\.soulapp\.cn/api/q(?:[/?#]|$)'
+    status_code: 200
+    headers:
+      Content-Type: application/json
+    body: '{}'
+
+mitm:
+  hostnames:
+    includes:
+      - "ssp.soulapp.cn"
