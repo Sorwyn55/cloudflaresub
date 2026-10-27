@@ -1,0 +1,15 @@
+# Apple Maps for Loon - derived from rules/AppleMaps.yaml
+# Routing: import as remote rule with policy DIRECT.
+# DNS: configure separately in Loon; remote rule does not set DNS.
+# The Egern wildcard patterns gspe*.ls.apple.com and gsp*.ls.apple.com
+# are not included because this conservative Loon rule list avoids unverified wildcard syntax.
+DOMAIN,maps.apple
+DOMAIN,maps.apple.com
+DOMAIN,maps.apple.com.cn
+DOMAIN,configuration.ls.apple.com
+DOMAIN,sundew.ls.apple.com
+DOMAIN,gs-loc.apple.com
+DOMAIN,gs-loc-cn.apple.com
+DOMAIN,cdn2.smoot.apple.com
+DOMAIN-SUFFIX,apple-mapkit.com
+DOMAIN-SUFFIX,is.autonavi.com
