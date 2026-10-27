@@ -1,0 +1,18 @@
+#!name = Soul 去广告（Loon 保守版）
+#!desc = 从 Egern 版移植：四个广告域名拦截、Soul 主域直连、开屏广告接口返回空 JSON。未实机验证。
+#!author = Sorwyn55 / ChatGPT 适配
+#!homepage = https://github.com/Sorwyn55/cloudflaresub
+#!date = 2026-10-28
+
+[Rule]
+DOMAIN,ad-h5-cdn.soulapp.cn,REJECT
+DOMAIN,ad-h5-station-cdn.soulapp.cn,REJECT
+DOMAIN,ad-r.soulapp.cn,REJECT
+DOMAIN,soul-ad.soulapp.cn,REJECT
+DOMAIN-SUFFIX,soulapp.cn,DIRECT
+
+[Rewrite]
+response if ${url} ~= /^https:\/\/ssp\.soulapp\.cn\/api\/q(?:[/?#]|$)/ then response.body.mock("json", `{}`, 200)
+
+[Mitm]
+hostname = ssp.soulapp.cn
