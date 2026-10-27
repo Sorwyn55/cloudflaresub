@@ -1,0 +1,7 @@
+#!name = Soul 重庆语音网络优化
+#!desc = Soul 主域名直连以减少海外代理绕路；不修改 GPS、不保证重庆定向匹配。与去广告插件可共存，但重复规则请避免。
+#!author = Sorwyn55 / ChatGPT
+#!homepage = https://github.com/Sorwyn55/cloudflaresub
+
+[Rule]
+DOMAIN-SUFFIX,soulapp.cn,DIRECT
