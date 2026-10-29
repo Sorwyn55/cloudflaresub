@@ -1,0 +1,50 @@
+# Apple Maps / Loon — targeted routing fix (2026-10-29)
+# Use as a Loon Remote Rule with policy=DIRECT (not as a Plugin).
+# Purpose: keep Maps tiles, dispatcher, traffic, and widgets on a consistent direct route.
+# No wildcards: Loon remote rules use DOMAIN / DOMAIN-SUFFIX.
+# No DNS settings: configure Loon Host/DNS separately if needed.
+# Intentionally do NOT match the whole apple.com, ls.apple.com or smoot.apple.com.
+# gspe1-ssl.ls.apple.com is shared for region checks by Maps and other Apple services,
+# so it is deliberately excluded to avoid overriding a separate Apple AI region policy.
+
+# Apple Maps entry points / configuration
+DOMAIN,maps.apple
+DOMAIN,maps.apple.com
+DOMAIN,maps.apple.com.cn
+DOMAIN,configuration.ls.apple.com
+DOMAIN,configuration.ls.apple.cn
+DOMAIN,gspe35-ssl.ls.apple.com
+DOMAIN,gspe35-ssl.ls.apple.cn
+DOMAIN,sundew.ls.apple.com
+DOMAIN,gs-loc.apple.com
+DOMAIN,gs-loc-cn.apple.com
+
+# Dispatcher / directions / geocoding (international and CN)
+DOMAIN,gsp-ssl.ls.apple.com
+DOMAIN,gsp10-ssl-cn.ls.apple.com
+DOMAIN,gsp12-cn.ls.apple.com
+DOMAIN,gsp13-cn.ls.apple.com
+DOMAIN,gsp4-cn.ls.apple.com
+DOMAIN,gsp5-cn.ls.apple.com
+DOMAIN,gsp85-cn-ssl.ls.apple.com
+
+# Map tiles / traffic / visual data (international and CN)
+DOMAIN,gspe11-2-cn-ssl.ls.apple.com
+DOMAIN,gspe12-ssl.ls.apple.com
+DOMAIN,gspe12-cn-ssl.ls.apple.com
+DOMAIN,gspe19-ssl.ls.apple.com
+DOMAIN,gspe19-cn-ssl.ls.apple.com
+DOMAIN,gspe19-2-cn-ssl.ls.apple.com
+DOMAIN,gspe19-cn.ls.apple.com
+DOMAIN,gspe21-ssl.ls.apple.com
+DOMAIN,gspe21.ls.apple.com
+DOMAIN,gspe79-cn-ssl.ls.apple.com
+DOMAIN,gspe85-cn-ssl.ls.apple.com
+
+# Existing map/search resource endpoints (preserved)
+DOMAIN,cdn2.smoot.apple.com
+DOMAIN-SUFFIX,apple-mapkit.com
+DOMAIN-SUFFIX,is.autonavi.com
+
+# NOTE: iOS widget refresh/cache issues, DNS faults, and conflicting
+# Loon local/plugin rules cannot be fixed by a remote domain list alone.
