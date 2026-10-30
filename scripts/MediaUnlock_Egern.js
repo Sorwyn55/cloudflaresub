@@ -68,7 +68,7 @@ function netflixTitle(r, item) {
   if(r.status===404 || r.status===410) return "missing";
   if(r.status===403 || r.status===429 || r.status>=500 || r.status<200 || r.status>=300) return "unknown";
   const body=r.text||"";
-  if(/NSEZ-403|page-404|<title[^>]*>\s*(?:Oh no!|Page Not Found)|oh no!\s*this title currently isn.t available to watch in your country|this title (?:is|isn.t) not available in your (?:current )?region|unavailable to watch in your country/i.test(body)) return "missing";
+  if(/NSEZ-403|page-404|<title[^>]*>\s*(?:Oh no!|Page Not Found)|oh no!|this title currently isn.t available to watch in your country|not available to watch in your country|this title (?:is|isn.t) not available in your (?:current )?region|unavailable to watch in your country/i.test(body)) return "missing";
   if(/unusual traffic|captcha|access denied|please enable javascript/i.test(body)) return "unknown";
   // 有与指定片目对应的结构化内容才算可见；HTTP 200 / 通用登陆页不算。
   const og=parseMeta(body,"og:title");
@@ -202,7 +202,7 @@ export default async function(ctx) {
   return {
     type:"widget",padding:small?12:16,gap:small?4:6,
     backgroundGradient:{type:"linear",colors:["#0C172E","#1B3052"],startPoint:{x:0,y:0},endPoint:{x:1,y:1}},
-    refreshAfter:new Date(Date.now()+30*60*1000).toISOString(),
+    refreshAfter:new Date(Date.now()+Math.min(24,Math.max(1,Number(env.REFRESH_HOURS)||6))*60*60*1000).toISOString(),
     children
   };
 }
