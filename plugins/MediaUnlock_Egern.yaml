@@ -1,17 +1,22 @@
-name: "流媒体解锁初筛"
-description: "检测流媒体网页与片目访问状态、落地 IP 和 ASN；不修改 DNS/分流，不启用 MITM，不保证播放解锁。"
+name: "流媒体解锁 · 严格检测 v2"
+description: "双源验证出口IP/国家/ASN；Netflix原创与4个版权片页面交叉抽样，YouTube页面地区提示，其他流媒体显式拦截识别。网页信号不等于整库或实际播放。"
 author: "Sorwyn55"
-icon: "play.rectangle"
+homepage: "https://github.com/Sorwyn55/cloudflaresub"
+icon: "play.rectangle.on.rectangle"
 env_schema:
   POLICY:
-    name: "检测策略或节点名"
-    description: "留空按当前 Egern 分流规则；输入确切的代理策略组名称或节点名，可让所有检测请求尝试统一出口。"
+    name: "检测节点 / 策略组"
+    description: "可填写确切的节点或策略组名称；留空按当前Egern分流。建议统一节点出口，防止测速与流媒体请求走不同IP。"
+    default_value: ""
+  EXPECT_REGION:
+    name: "期望出口国家代码"
+    description: "可选：填写两位国家代码，如DE、TR或US，出口定位不同会显示红色警告。不能代表流媒体实际地区。"
     default_value: ""
 scriptings:
   - generic:
       name: "MediaUnlock_Egern"
       script_url: "https://raw.githubusercontent.com/Sorwyn55/cloudflaresub/main/scripts/MediaUnlock_Egern.js"
-      update_interval: 86400
+      update_interval: 21600
       timeout: 60
 widgets:
   - name: "流媒体解锁初筛"
