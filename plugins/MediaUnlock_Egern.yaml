@@ -1,0 +1,18 @@
+name: "流媒体解锁初筛"
+description: "检测流媒体网页与片目访问状态、落地 IP 和 ASN；不修改 DNS/分流，不启用 MITM，不保证播放解锁。"
+author: "Sorwyn55"
+icon: "play.rectangle"
+env_schema:
+  POLICY:
+    name: "检测策略或节点名"
+    description: "留空按当前 Egern 分流规则；输入确切的代理策略组名称或节点名，可让所有检测请求尝试统一出口。"
+    default_value: ""
+scriptings:
+  - generic:
+      name: "MediaUnlock_Egern"
+      script_url: "https://raw.githubusercontent.com/Sorwyn55/cloudflaresub/main/scripts/MediaUnlock_Egern.js"
+      update_interval: 86400
+      timeout: 60
+widgets:
+  - name: "流媒体解锁初筛"
+    script_name: "MediaUnlock_Egern"
