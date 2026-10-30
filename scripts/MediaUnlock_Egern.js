@@ -12,7 +12,7 @@
  * 不修改DNS/代理规则，不启用MITM，不读取浏览器Cookie。
  */
 
-const NF_ORIGINAL={id:"80018499",name:"Stranger Things"};
+const NF_ORIGINAL={id:"80057281",name:"Stranger Things"};
 const NF_LICENSED=[
   {id:"70143836",name:"Breaking Bad"},
   {id:"80027042",name:"授权样本 B"},
@@ -68,18 +68,21 @@ function netflixTitle(r, item) {
   if(r.status===404 || r.status===410) return "missing";
   if(r.status===403 || r.status===429 || r.status>=500 || r.status<200 || r.status>=300) return "unknown";
   const body=r.text||"";
-  if(/NSEZ-403|page-404|<title[^>]*>\s*(?:Oh no!|Page Not Found)/i.test(body)) return "missing";
+  if(/NSEZ-403|page-404|<title[^>]*>\s*(?:Oh no!|Page Not Found)|oh no!\s*this title currently isn.t available to watch in your country|this title (?:is|isn.t) not available in your (?:current )?region|unavailable to watch in your country/i.test(body)) return "missing";
   if(/unusual traffic|captcha|access denied|please enable javascript/i.test(body)) return "unknown";
   // 有与指定片目对应的结构化内容才算可见；HTTP 200 / 通用登陆页不算。
   const og=parseMeta(body,"og:title");
+  const heading=body.match(/<h1[^>]*>([\s\S]{2,400}?)<\/h1>/i);
+  const h1Text=heading?heading[1].replace(/<[^>]*>/g,"").trim():"";
   const titleMatch=body.match(/<title[^>]*>([^<]{2,220})<\/title>/i);
-  const title=(og|| (titleMatch?titleMatch[1]:"")).trim();
+  const title=(h1Text || og || (titleMatch?titleMatch[1]:"")).trim();
   const looksLikeTitle=title.length>5 && !/^(netflix|sign in|log in|not found|oh no|home)[\s|:-]*$/i.test(title);
   const metadataId=new RegExp('(?:["\\x27](?:videoId|video_id|titleId|video_id)["\\x27]\\s*:\\s*["\\x27]?'+item.id+'\\b)','i').test(body);
-  const named=item.name!=="授权样本 B" && item.name!=="授权样本 C" && item.name!=="授权样本 D";
+  const named=!item.name.startsWith("授权样本");
   const namedTitle=named && title.toLowerCase().includes(item.name.toLowerCase());
-  // 未知片名样本必须通过片目元数据ID + 标题两个证据。
-  if(looksLikeTitle && (namedTitle || metadataId)) return "visible";
+  // h1 为指定片目标题，且排除了地区不可用提示；仅表示片目页证据，非播放。
+  const dedicatedPage=!!h1Text && h1Text.length>3 && !/^(netflix|sign in|log in|oh no|page not found)$/i.test(h1Text) && /netflix/i.test(body.slice(0,6000));
+  if(looksLikeTitle && (namedTitle || metadataId || dedicatedPage)) return "visible";
   return "unknown";
 }
 function nfSummary(results) {
@@ -135,7 +138,9 @@ export default async function(ctx) {
     try {
       const r=await ctx.http.get(url,{...base,headers: isJson?{"Accept":"application/json"}:headers});
       if(isJson) return {status:r.status,data:await r.json()};
-      return {status:r.status,text:(await r.text()).slice(0,240000)};
+      const html=await r.text();
+      // Netflix h1 在某些页面位于 >1MB 处；2.5MB 限制可兼顾移动端内存。
+      return {status:r.status,text:html.slice(0,url.includes("netflix.com/title/")?2500000:240000)};
     } catch(e) {return {status:0,error:String(e)};}
   }
   const geo1=read("https://ipwho.is/",true).then(r=>{
