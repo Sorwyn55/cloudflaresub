@@ -1,18 +1,44 @@
-#!name = Soul 去广告（Loon 保守版）
-#!desc = 从 Egern 版移植：四个广告域名拦截、Soul 主域直连、开屏广告接口返回空 JSON。未实机验证。
-#!author = Sorwyn55 / ChatGPT 适配
-#!homepage = https://github.com/Sorwyn55/cloudflaresub
-#!date = 2026-10-28
+#!name = Soul 去广告
+#!desc = 2026-11-03 按 fmz200/wool_scripts 当前 Soul 规则更新；保留原订阅链接。网络出口/重庆语音分流继续由独立规则负责。
+#!author = fmz200 / Sorwyn55 maintenance
+#!homepage = https://github.com/fmz200/wool_scripts
+#!date = 2026-11-03
+
+[Argument]
+soul_enable = switch,true,false,tag=Soul-脚本开关
 
 [Rule]
-DOMAIN,ad-h5-cdn.soulapp.cn,REJECT
-DOMAIN,ad-h5-station-cdn.soulapp.cn,REJECT
-DOMAIN,ad-r.soulapp.cn,REJECT
 DOMAIN,soul-ad.soulapp.cn,REJECT
-DOMAIN-SUFFIX,soulapp.cn,DIRECT
+DOMAIN,ad-r.soulapp.cn,REJECT
+DOMAIN,ad-reward.soulapp.cn,REJECT
+DOMAIN-SUFFIX,cdn.soulapp.cn,REJECT
+IP-CIDR,47.56.131.76/32,REJECT,no-resolve
+IP-CIDR,47.97.215.55/32,REJECT,no-resolve
+IP-CIDR,47.99.42.29/32,REJECT,no-resolve
+IP-CIDR,120.27.235.201/32,REJECT,no-resolve
+IP-CIDR,121.196.197.147/32,REJECT,no-resolve
 
 [Rewrite]
-response if ${url} ~= /^https:\/\/ssp\.soulapp\.cn\/api\/q(?:[/?#]|$)/ then response.body.mock("json", `{}`, 200)
+^https?:\/\/ssp\.soulapp\.cn\/api\/q reject-dict
+^https?:\/\/ssp\.soulapp\.cn\/api\/ad\/config reject-dict
+^https?:\/\/chat-live\.soulapp\.cn\/live\/planet\/recListV2 reject-200
+^https?:\/\/api-chat\.soulapp\.cn\/chat\/entrance\/first reject-dict
+^https?:\/\/api-global\.soulapp\.me\/app\/open\/get reject
 
-[Mitm]
-hostname = ssp.soulapp.cn
+[Script]
+http-request ^https:\/\/data-collector\.soulapp\.cn\/api\/data\/report\/v\d script-path=https://raw.githubusercontent.com/fmz200/wool_scripts/main/Scripts/template/req_replace_body.js, requires-body=true, timeout=60, tag=req_replace_body, enable={soul_enable}
+http-response ^https?:\/\/api-account\.soulapp\.cn\/teenager\/config script-path=https://raw.githubusercontent.com/fmz200/wool_scripts/main/Scripts/soul/soul_ads.js, requires-body=true, timeout=60, tag=soul_ads, enable={soul_enable}
+http-response ^https?:\/\/api-a\.soulapp\.cn\/v2\/post\/gift\/list script-path=https://raw.githubusercontent.com/fmz200/wool_scripts/main/Scripts/soul/soul_ads.js, requires-body=true, timeout=60, tag=soul_ads, enable={soul_enable}
+http-response ^https?:\/\/api-a\.soulapp\.cn\/official\/scene\/module script-path=https://raw.githubusercontent.com/fmz200/wool_scripts/main/Scripts/soul/soul_ads.js, requires-body=true, timeout=60, tag=soul_ads, enable={soul_enable}
+http-response ^https?:\/\/api-user\.soulapp\.cn\/furion\/position\/content script-path=https://raw.githubusercontent.com/fmz200/wool_scripts/main/Scripts/soul/soul_ads.js, requires-body=true, timeout=60, tag=soul_ads, enable={soul_enable}
+http-response ^https?:\/\/api-user\.soulapp\.cn\/v\d\/planet\/config script-path=https://raw.githubusercontent.com/fmz200/wool_scripts/main/Scripts/soul/soul_ads.js, requires-body=true, timeout=60, tag=soul_ads, enable={soul_enable}
+http-response ^https?:\/\/api-chat\.soulapp\.cn\/chat\/limitInfo script-path=https://raw.githubusercontent.com/fmz200/wool_scripts/main/Scripts/soul/soul_ads.js, requires-body=true, timeout=60, tag=soul_ads, enable={soul_enable}
+http-response ^https?:\/\/post\.soulapp\.cn\/hot\/soul\/rank script-path=https://raw.githubusercontent.com/fmz200/wool_scripts/main/Scripts/soul/soul_ads.js, requires-body=true, timeout=60, tag=soul_ads, enable={soul_enable}
+http-response ^https?:\/\/post\.soulapp\.cn\/v\d\/post\/homepage\/guide\/card script-path=https://raw.githubusercontent.com/fmz200/wool_scripts/main/Scripts/soul/soul_ads.js, requires-body=true, timeout=60, tag=soul_ads, enable={soul_enable}
+http-response ^https?:\/\/post\.soulapp\.cn\/v\d\/post\/recSquare\/subTabs script-path=https://raw.githubusercontent.com/fmz200/wool_scripts/main/Scripts/soul/soul_ads.js, requires-body=true, timeout=60, tag=soul_ads, enable={soul_enable}
+http-response ^https?:\/\/chat-live\.soulapp\.cn\/chatroom\/chatClassifyRoomList script-path=https://raw.githubusercontent.com/fmz200/wool_scripts/main/Scripts/soul/soul_ads.js, requires-body=true, timeout=60, tag=soul_ads, enable={soul_enable}
+http-response ^https?:\/\/gateway-mobile-gray\.soulapp\.cn\/mobile\/app\/version\/queryIos script-path=https://raw.githubusercontent.com/fmz200/wool_scripts/main/Scripts/soul/soul_ads.js, requires-body=true, timeout=60, tag=soul_ads, enable={soul_enable}
+http-response ^https?:\/\/47\.110\.187\.87\/winterfell\/v2\/getIpByDomain script-path=https://raw.githubusercontent.com/fmz200/wool_scripts/main/Scripts/soul/soul_ads.js, requires-body=true, timeout=60, tag=soul_ads, enable={soul_enable}
+
+[MITM]
+hostname = 47.110.187.87, ssp.soulapp.cn, chat-live.soulapp.cn, api-chat.soulapp.cn, api-account.soulapp.cn, api-global.soulapp.me, api-a.soulapp.cn, api-pay.soulapp.cn, gateway-mobile-gray.soulapp.cn, post.soulapp.cn, api-user.soulapp.cn
