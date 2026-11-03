@@ -1,50 +1,148 @@
-name: "Soul 去广告（保守版）"
-description: "Soul 去广告 + 可配置网络出口（默认 DIRECT 国内直连）。尚未在用户设备实测。"
-author: "社区规则整理 / Egern 适配"
-homepage: "https://clashios.app/stoverride/lodepuly_vpn_tool/Soul_remove_ads"
+name: "Soul 去广告"
+description: "Soul iOS 去广告。2026-11-03 按 fmz200/wool_scripts 当前 Soul 规则更新；保留原订阅链接。"
+author: "fmz200 / Sorwyn55 maintenance"
+homepage: "https://github.com/fmz200/wool_scripts"
 icon: "shield.lefthalf.filled"
 
-# SOUL_POLICY 默认为 DIRECT：从本机宽带/移动网络直接访问 Soul，通常显示本地 IP 归属地。
-# 可在主配置的 modules 引用中使用 compat_arguments.SOUL_POLICY 覆盖为已存在的策略组名/节点名。
-# 注意 PROXY 不是 Egern 内置策略名，只有在你确实建有叫 PROXY 的策略组时才可填写。
-compat_arguments:
-  SOUL_POLICY: "DIRECT"
-compat_arguments_desc: "SOUL_POLICY: 默认 DIRECT（本地直连）。如需走代理，在 Egern 主配置的 modules 引用中将 SOUL_POLICY 改为现有代理策略组/节点的准确名称。仅作用于 soulapp.cn 及其子域；App 其他主机按既有规则分流。"
-
-# 来源：lodepuly Soul 去广告规则（2024-07-16）；请勿将旧版配置当作当前版本的实机测试结果。
-# 以下四条广告域名为来源中明确标注的拦截目标。
-# 仅做精确域名拦截，不屏蔽整个 soulapp.cn，以免影响 Soul 正常功能。
+# 只处理广告/运营接口，不在本模块里强制 Soul 全域 DIRECT。
+# Soul 的本地直连/重庆语音网络策略请继续交给独立分流规则，避免去广告模块和网络策略互相抢规则。
 rules:
   - domain:
-      match: "ad-h5-cdn.soulapp.cn"
-      policy: REJECT
-  - domain:
-      match: "ad-h5-station-cdn.soulapp.cn"
+      match: "soul-ad.soulapp.cn"
       policy: REJECT
   - domain:
       match: "ad-r.soulapp.cn"
       policy: REJECT
   - domain:
-      match: "soul-ad.soulapp.cn"
+      match: "ad-reward.soulapp.cn"
       policy: REJECT
-
-# Soul 主域名分流：放在四条广告拒绝规则之后，避免 DIRECT 抢先命中广告请求。
-# 官方 Egern 模块支持 compat_arguments 参数替换：{{{SOUL_POLICY}}}。
-# 来源：lodepuly Soul 规则指定 DOMAIN-SUFFIX,soulapp.cn,DIRECT（2024-07-16）。
-# 未覆盖未证实属于 Soul 的 IP 段或第三方域名；需要结合 Egern 请求日志排查漏网请求。
   - domain_suffix:
-      match: "soulapp.cn"
-      policy: "{{{SOUL_POLICY}}}"
+      match: "cdn.soulapp.cn"
+      policy: REJECT
+  - ip_cidr:
+      match: "47.56.131.76/32"
+      policy: REJECT
+      no_resolve: true
+  - ip_cidr:
+      match: "47.97.215.55/32"
+      policy: REJECT
+      no_resolve: true
+  - ip_cidr:
+      match: "47.99.42.29/32"
+      policy: REJECT
+      no_resolve: true
+  - ip_cidr:
+      match: "120.27.235.201/32"
+      policy: REJECT
+      no_resolve: true
+  - ip_cidr:
+      match: "121.196.197.147/32"
+      policy: REJECT
+      no_resolve: true
 
-# 仅拦截 ssp.soulapp.cn 的开屏竞价接口。需开启 Egern HTTPS 解密并信任证书。
 map_locals:
-  - match: '^https://ssp\.soulapp\.cn/api/q(?:[/?#]|$)'
+  - match: '^https?://ssp\.soulapp\.cn/api/q'
+    status_code: 200
+    headers:
+      Content-Type: application/json
+    body: '{}'
+  - match: '^https?://ssp\.soulapp\.cn/api/ad/config'
+    status_code: 200
+    headers:
+      Content-Type: application/json
+    body: '{}'
+  - match: '^https?://chat-live\.soulapp\.cn/live/planet/recListV2'
+    status_code: 200
+    body: ' '
+  - match: '^https?://api-chat\.soulapp\.cn/chat/entrance/first'
     status_code: 200
     headers:
       Content-Type: application/json
     body: '{}'
 
+scriptings:
+  - http_response:
+      name: "Soul 青少年模式弹窗"
+      match: '^https?://api-account\.soulapp\.cn/teenager/config'
+      script_url: "https://raw.githubusercontent.com/Sorwyn55/cloudflaresub/main/scripts/Soul_AdBlock_Egern.js"
+      body_required: true
+      timeout: 60
+  - http_response:
+      name: "Soul 礼物榜推广"
+      match: '^https?://api-a\.soulapp\.cn/v2/post/gift/list'
+      script_url: "https://raw.githubusercontent.com/Sorwyn55/cloudflaresub/main/scripts/Soul_AdBlock_Egern.js"
+      body_required: true
+      timeout: 60
+  - http_response:
+      name: "Soul 官方场景推广"
+      match: '^https?://api-a\.soulapp\.cn/official/scene/module'
+      script_url: "https://raw.githubusercontent.com/Sorwyn55/cloudflaresub/main/scripts/Soul_AdBlock_Egern.js"
+      body_required: true
+      timeout: 60
+  - http_response:
+      name: "Soul 运营位"
+      match: '^https?://api-user\.soulapp\.cn/furion/position/content'
+      script_url: "https://raw.githubusercontent.com/Sorwyn55/cloudflaresub/main/scripts/Soul_AdBlock_Egern.js"
+      body_required: true
+      timeout: 60
+  - http_response:
+      name: "Soul 星球配置"
+      match: '^https?://api-user\.soulapp\.cn/v\d/planet/config'
+      script_url: "https://raw.githubusercontent.com/Sorwyn55/cloudflaresub/main/scripts/Soul_AdBlock_Egern.js"
+      body_required: true
+      timeout: 60
+  - http_response:
+      name: "Soul 聊天限制"
+      match: '^https?://api-chat\.soulapp\.cn/chat/limitInfo'
+      script_url: "https://raw.githubusercontent.com/Sorwyn55/cloudflaresub/main/scripts/Soul_AdBlock_Egern.js"
+      body_required: true
+      timeout: 60
+  - http_response:
+      name: "Soul 热门运营位"
+      match: '^https?://post\.soulapp\.cn/hot/soul/rank'
+      script_url: "https://raw.githubusercontent.com/Sorwyn55/cloudflaresub/main/scripts/Soul_AdBlock_Egern.js"
+      body_required: true
+      timeout: 60
+  - http_response:
+      name: "Soul 首页引导卡"
+      match: '^https?://post\.soulapp\.cn/v\d/post/homepage/guide/card'
+      script_url: "https://raw.githubusercontent.com/Sorwyn55/cloudflaresub/main/scripts/Soul_AdBlock_Egern.js"
+      body_required: true
+      timeout: 60
+  - http_response:
+      name: "Soul 广场标签"
+      match: '^https?://post\.soulapp\.cn/v\d/post/recSquare/subTabs'
+      script_url: "https://raw.githubusercontent.com/Sorwyn55/cloudflaresub/main/scripts/Soul_AdBlock_Egern.js"
+      body_required: true
+      timeout: 60
+  - http_response:
+      name: "Soul 聊天室分类"
+      match: '^https?://chat-live\.soulapp\.cn/chatroom/chatClassifyRoomList'
+      script_url: "https://raw.githubusercontent.com/Sorwyn55/cloudflaresub/main/scripts/Soul_AdBlock_Egern.js"
+      body_required: true
+      timeout: 60
+  - http_response:
+      name: "Soul 更新提示"
+      match: '^https?://gateway-mobile-gray\.soulapp\.cn/mobile/app/version/queryIos'
+      script_url: "https://raw.githubusercontent.com/Sorwyn55/cloudflaresub/main/scripts/Soul_AdBlock_Egern.js"
+      body_required: true
+      timeout: 60
+  - http_response:
+      name: "Soul HTTPDNS"
+      match: '^https?://47\.110\.187\.87/winterfell/v2/getIpByDomain'
+      script_url: "https://raw.githubusercontent.com/Sorwyn55/cloudflaresub/main/scripts/Soul_AdBlock_Egern.js"
+      body_required: true
+      timeout: 60
+
 mitm:
   hostnames:
     includes:
+      - "47.110.187.87"
       - "ssp.soulapp.cn"
+      - "chat-live.soulapp.cn"
+      - "api-chat.soulapp.cn"
+      - "api-account.soulapp.cn"
+      - "api-a.soulapp.cn"
+      - "gateway-mobile-gray.soulapp.cn"
+      - "post.soulapp.cn"
+      - "api-user.soulapp.cn"
