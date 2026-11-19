@@ -1,0 +1,21 @@
+# Claude DNS domain rule set for Egern
+# For: Tools > DNS Traffic Control > DNS Forward Rules > Proxy Rule Set
+# Match ONLY domains dedicated to Claude / Anthropic; avoid shared services.
+# Set DNS upstream in the Egern UI (e.g. GoogleDNS or ForeignDNS).
+# Updated: 2026-11-19
+
+domain_suffix_set:
+  - anthropic.com
+  - claude.ai
+  - claude.com
+  - clau.de
+  - claudemcpclient.com
+  - claudemcpcontent.com
+  - claudeusercontent.com
+
+domain_set:
+  - servd-anthropic-website.b-cdn.net
+  - anthropic.com.cdn.cloudflare.net
+  - anthropic.auth0.com
+  - anthropic-com.ghost.io
+  - browser-intake-us5-datadoghq.com
