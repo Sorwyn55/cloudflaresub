@@ -2,12 +2,13 @@
 # Loon: Remote Rule > URL; choose your Claude proxy policy in app.
 # Domain evidence: https://ip.net.coffee/claude/site.html
 # IP ranges verified: https://platform.claude.com/docs/en/api/ip-addresses
-# Updated: 2026-11-19
+# Updated: 2026-11-20
 #
 # Core websites, app, API, Claude Code and MCP
 DOMAIN-SUFFIX,anthropic.com
 DOMAIN-SUFFIX,claude.ai
 DOMAIN-SUFFIX,claude.com
+DOMAIN-SUFFIX,claude.app
 DOMAIN-SUFFIX,clau.de
 DOMAIN-SUFFIX,claudemcpclient.com
 DOMAIN-SUFFIX,claudemcpcontent.com
@@ -22,6 +23,11 @@ DOMAIN,anthropic-com.ghost.io
 # One identified telemetry endpoint (third-party shared infrastructure)
 DOMAIN,browser-intake-us5-datadoghq.com
 
+# Exact shared endpoints observed in claude.ai CSP / official Claude Code docs
+DOMAIN,api-iam.intercom.io
+DOMAIN,nexus-websocket-a.intercom.io
+DOMAIN,http-intake.logs.us5.datadoghq.com
+
 # Anthropic officially documented inbound IP ranges (API / Console)
 IP-CIDR,160.79.104.0/23,no-resolve
 IP-CIDR,153.61.224.0/22,no-resolve
@@ -35,3 +41,10 @@ IP-ASN,399358,no-resolve
 # withpersona.com, frompersona.com, maps.googleapis.com, cdn.usefathom.com
 # Avoid broad DOMAIN-KEYWORD datadog/sift/sentry and NTP rules:
 # unrelated apps may use the same service, and NTP does not disclose time zone.
+
+# Optional, NOT enabled (shared across other apps and sites; evidence of necessity is insufficient):
+# DOMAIN,r.stripe.com
+# DOMAIN,us.sentry.io
+# DOMAIN,siftscience.com
+# DOMAIN,fcmtoken.googleapis.com
+# IP-CIDR,34.8.0.0/16,no-resolve  # DO NOT ENABLE: broad Google Cloud range, not Anthropic-exclusive
