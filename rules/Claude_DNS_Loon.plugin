@@ -1,0 +1,29 @@
+#!name = Claude 专属 DNS (Google DoH)
+#!desc = 仅将 Claude / Anthropic 相关域名指定至 Google DNS over HTTPS。不会改变其他域名的 DNS。
+#!author = Sorwyn55
+#!homepage = https://github.com/Sorwyn55/cloudflaresub
+#!type = normal
+
+# Loon Host Map DNS override - not a Remote Rule list.
+# Reference: https://nsloon.app/docs/DNS/hostmap/
+# Updated: 2026-11-19
+# These entries do not determine proxy egress; use Claude_Loon.list for traffic routing.
+[Host]
+anthropic.com = server:https://dns.google/dns-query
+*.anthropic.com = server:https://dns.google/dns-query
+claude.ai = server:https://dns.google/dns-query
+*.claude.ai = server:https://dns.google/dns-query
+claude.com = server:https://dns.google/dns-query
+*.claude.com = server:https://dns.google/dns-query
+clau.de = server:https://dns.google/dns-query
+*.clau.de = server:https://dns.google/dns-query
+claudemcpclient.com = server:https://dns.google/dns-query
+*.claudemcpclient.com = server:https://dns.google/dns-query
+claudemcpcontent.com = server:https://dns.google/dns-query
+*.claudemcpcontent.com = server:https://dns.google/dns-query
+claudeusercontent.com = server:https://dns.google/dns-query
+*.claudeusercontent.com = server:https://dns.google/dns-query
+anthropic.com.cdn.cloudflare.net = server:https://dns.google/dns-query
+servd-anthropic-website.b-cdn.net = server:https://dns.google/dns-query
+anthropic.auth0.com = server:https://dns.google/dns-query
+anthropic-com.ghost.io = server:https://dns.google/dns-query
