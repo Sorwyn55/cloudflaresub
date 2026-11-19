@@ -1,0 +1,81 @@
+# Egern module: Claude-specific DNS forwarding (2026-11-19)
+# dns.forward selects resolvers; their actual transport path follows traffic rules.
+# Existing bootstrap and proxy_nameservers settings remain unchanged.
+name: "Claude · DNS 分流"
+description: "Claude 相关域名使用加密 DoH，其他域名的 DNS 策略保持不变。"
+author: "ChatGPT"
+homepage: "https://ip.net.coffee/claude/site.html"
+dns:
+  upstreams:
+    claude_encrypted:
+      - "https://cloudflare-dns.com/dns-query"
+      - "https://dns.google/dns-query"
+  forward:
+    - domain_suffix:
+        match: "anthropic.com"
+        value: claude_encrypted
+    - domain_suffix:
+        match: "claude.ai"
+        value: claude_encrypted
+    - domain_suffix:
+        match: "claude.com"
+        value: claude_encrypted
+    - domain_suffix:
+        match: "clau.de"
+        value: claude_encrypted
+    - domain_suffix:
+        match: "claudemcpclient.com"
+        value: claude_encrypted
+    - domain_suffix:
+        match: "claudemcpcontent.com"
+        value: claude_encrypted
+    - domain_suffix:
+        match: "claudeusercontent.com"
+        value: claude_encrypted
+    - domain:
+        match: "servd-anthropic-website.b-cdn.net"
+        value: claude_encrypted
+    - domain:
+        match: "anthropic.com.cdn.cloudflare.net"
+        value: claude_encrypted
+    - domain:
+        match: "anthropic.auth0.com"
+        value: claude_encrypted
+    - domain:
+        match: "anthropic-com.ghost.io"
+        value: claude_encrypted
+    - domain:
+        match: "browser-intake-us5-datadoghq.com"
+        value: claude_encrypted
+    - domain_suffix:
+        match: "sentry.io"
+        value: claude_encrypted
+        disabled: true
+    - domain_suffix:
+        match: "statsigapi.net"
+        value: claude_encrypted
+        disabled: true
+    - domain_suffix:
+        match: "intercom.io"
+        value: claude_encrypted
+        disabled: true
+    - domain_suffix:
+        match: "intercomcdn.com"
+        value: claude_encrypted
+        disabled: true
+    - domain_suffix:
+        match: "withpersona.com"
+        value: claude_encrypted
+        disabled: true
+    - domain_suffix:
+        match: "frompersona.com"
+        value: claude_encrypted
+        disabled: true
+    - domain:
+        match: "cdn.usefathom.com"
+        value: claude_encrypted
+        disabled: true
+    - domain:
+        match: "maps.googleapis.com"
+        value: claude_encrypted
+        disabled: true
