@@ -42,9 +42,9 @@ IP-ASN,399358,no-resolve
 # Avoid broad DOMAIN-KEYWORD datadog/sift/sentry and NTP rules:
 # unrelated apps may use the same service, and NTP does not disclose time zone.
 
-# Optional, NOT enabled (shared across other apps and sites; evidence of necessity is insufficient):
-# DOMAIN,r.stripe.com
-# DOMAIN,us.sentry.io
-# DOMAIN,siftscience.com
-# DOMAIN,fcmtoken.googleapis.com
+# User opted in to route these exact shared endpoints via Claude policy (could also affect other apps):
+DOMAIN,r.stripe.com
+DOMAIN,us.sentry.io
+DOMAIN,siftscience.com
+DOMAIN,fcmtoken.googleapis.com
 # IP-CIDR,34.8.0.0/16,no-resolve  # DO NOT ENABLE: broad Google Cloud range, not Anthropic-exclusive
