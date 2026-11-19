@@ -2,12 +2,13 @@
 # For: Tools > DNS Traffic Control > DNS Forward Rules > Proxy Rule Set
 # Match ONLY domains dedicated to Claude / Anthropic; avoid shared services.
 # Set DNS upstream in the Egern UI (e.g. GoogleDNS or ForeignDNS).
-# Updated: 2026-11-19
+# Updated: 2026-11-20
 
 domain_suffix_set:
   - anthropic.com
   - claude.ai
   - claude.com
+  - claude.app
   - clau.de
   - claudemcpclient.com
   - claudemcpcontent.com
@@ -19,3 +20,6 @@ domain_set:
   - anthropic.auth0.com
   - anthropic-com.ghost.io
   - browser-intake-us5-datadoghq.com
+
+# Third-party Intercom, Datadog, Stripe, Sentry, Sift, and Google
+# are intentionally omitted from DNS mapping (shared across apps).
