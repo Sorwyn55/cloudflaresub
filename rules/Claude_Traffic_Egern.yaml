@@ -1,6 +1,6 @@
-# Egern module: Claude traffic routing (2026-11-19)
+# Egern module: Claude traffic routing (2026-11-20)
 # Change CLAUDE_POLICY to an existing Egern proxy/policy group.
-# Broad shared third-party domains remain disabled to prevent collateral routing.
+# Only verified *exact* shared service endpoints are enabled; other shared endpoints stay disabled.
 name: "Claude · 流量分流"
 description: "Claude 核心域名与 Anthropic IP/ASN 分流，非专属第三方域名默认禁用。"
 author: "ChatGPT"
@@ -16,6 +16,9 @@ rules:
       policy: "{{{CLAUDE_POLICY}}}"
   - domain_suffix:
       match: "claude.com"
+      policy: "{{{CLAUDE_POLICY}}}"
+  - domain_suffix:
+      match: "claude.app"
       policy: "{{{CLAUDE_POLICY}}}"
   - domain_suffix:
       match: "clau.de"
@@ -44,6 +47,33 @@ rules:
   - domain:
       match: "browser-intake-us5-datadoghq.com"
       policy: "{{{CLAUDE_POLICY}}}"
+  # Verified in claude.ai CSP (Intercom), and Anthropic official Claude Code network docs (Datadog):
+  - domain:
+      match: "api-iam.intercom.io"
+      policy: "{{{CLAUDE_POLICY}}}"
+  - domain:
+      match: "nexus-websocket-a.intercom.io"
+      policy: "{{{CLAUDE_POLICY}}}"
+  - domain:
+      match: "http-intake.logs.us5.datadoghq.com"
+      policy: "{{{CLAUDE_POLICY}}}"
+  # Optional shared infrastructure. Enable only after observing a Claude-specific need.
+  - domain:
+      match: "r.stripe.com"
+      policy: "{{{CLAUDE_POLICY}}}"
+      disabled: true
+  - domain:
+      match: "us.sentry.io"
+      policy: "{{{CLAUDE_POLICY}}}"
+      disabled: true
+  - domain:
+      match: "siftscience.com"
+      policy: "{{{CLAUDE_POLICY}}}"
+      disabled: true
+  - domain:
+      match: "fcmtoken.googleapis.com"
+      policy: "{{{CLAUDE_POLICY}}}"
+      disabled: true
   - domain_suffix:
       match: "sentry.io"
       policy: "{{{CLAUDE_POLICY}}}"
